@@ -33,6 +33,21 @@ from src.scrapers.playwright_scraper import ScraperConfig
 import time
 import atexit
 import logging
+import subprocess
+import sys
+
+# Auto-install browsers on Streamlit Cloud
+def install_browsers():
+    try:
+        # Check if we are running in a Streamlit Cloud environment (usually has this env var)
+        if os.getenv("STREAMLIT_SERVER_BASE_URL") or os.getenv("IS_CLOUD"):
+            logger.info("Detected cloud environment. Installing Patchright browsers...")
+            subprocess.run([sys.executable, "-m", "patchright", "install", "chromium"], check=True)
+            logger.info("Browsers installed successfully.")
+    except Exception as e:
+        logger.error(f"Failed to install browsers: {e}")
+
+install_browsers()
 
 logger = logging.getLogger(__name__)
 
